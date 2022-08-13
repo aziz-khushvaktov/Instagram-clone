@@ -20,13 +20,15 @@ class FavoriteAdapter(var fragment: FavoriteFragment, var items: ArrayList<Post>
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val post = items[position]
         if (holder is PostViewHolder) {
-            val iv_post = holder.binding.ivPost
             holder.binding.apply {
-                Glide.with(fragment).load(post.postImg).into(iv_post)
+                Glide.with(fragment).load(post.postImg).into(ivPost)
                 tvCaption.text = post.caption
                 tvFullName.text = post.fullName
                 tvTime.text = post.currentDate
-                Glide.with(fragment).load(post.userImg).into(ivProfile)
+                Glide.with(fragment).load(post.userImg)
+                    .placeholder(R.drawable.img_default_user)
+                    .error(R.drawable.img_default_user)
+                    .into(ivProfile)
 
                 ivLike.setOnClickListener {
                     if (post.isLiked) {

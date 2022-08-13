@@ -121,9 +121,7 @@ class HomeFragment : BaseFragment() {
                 loadMyFeeds()
             }
 
-            override fun onError(e: Exception) {
-
-            }
+            override fun onError(e: Exception) {}
 
         })
     }

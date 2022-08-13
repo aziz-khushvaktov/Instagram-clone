@@ -1,8 +1,10 @@
 package com.example.instaclonekotlin.utils
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.app.Dialog
 import android.content.Context
+import android.provider.Settings
 import android.util.DisplayMetrics
 import android.view.Window
 import android.view.WindowManager
@@ -13,8 +15,11 @@ import com.example.instaclonekotlin.model.ScreenSize
 
 object Utils {
 
-    fun fireToast(context: Context, msg: String) {
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+
+    @SuppressLint("HardwareIds")
+    fun getDeviceID(context: Context): String {
+        val device_id: String = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        return device_id
     }
 
     fun screenSize(context: Application): ScreenSize {
@@ -50,6 +55,9 @@ object Utils {
         val d_confirm = dialog.findViewById<TextView>(R.id.d_confirm)
         val d_cancel = dialog.findViewById<TextView>(R.id.d_cancel)
             d_title.text = title
+        d_cancel.setOnClickListener {
+            dialog.dismiss()
+        }
         d_confirm.setOnClickListener {
             dialog.dismiss()
             callBack.onCallBack(true)

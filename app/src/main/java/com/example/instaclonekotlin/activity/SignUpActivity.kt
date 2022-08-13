@@ -1,16 +1,17 @@
 package com.example.instaclonekotlin.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.example.instaclonekotlin.R
 import com.example.instaclonekotlin.databinding.ActivitySignUpBinding
 import com.example.instaclonekotlin.manager.AuthManager
 import com.example.instaclonekotlin.manager.DBManager
+import com.example.instaclonekotlin.manager.PrefsManager
 import com.example.instaclonekotlin.manager.handler.AuthHandler
 import com.example.instaclonekotlin.manager.handler.DBUserHandler
 import com.example.instaclonekotlin.model.User
 import com.example.instaclonekotlin.utils.Extensions.toast
-import java.lang.Exception
+import com.example.instaclonekotlin.utils.Utils
 
 /**
  * In SignUpActivity, user can sign up with fullName, email and password
@@ -33,7 +34,7 @@ class SignUpActivity : BaseActivity() {
                 var email = etEmail.text.toString().trim()
                 var password = etPassword.text.toString().trim()
                 if (fullName.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
-                    val user = User(fullName, email,password,"")
+                    val user = User(fullName, email, password, "")
                     firebaseSignUp(user)
                 }
             }
@@ -44,7 +45,7 @@ class SignUpActivity : BaseActivity() {
 
     private fun firebaseSignUp(user: User) {
         showDialog(this)
-        AuthManager.signUp(user.email,user.password,object : AuthHandler {
+        AuthManager.signUp(user.email, user.password, object : AuthHandler {
             override fun onSuccess(uid: String) {
                 user.uid = uid
                 dismissDialog()
@@ -57,11 +58,14 @@ class SignUpActivity : BaseActivity() {
                 toast(getString(R.string.str_signIn_failed))
                 dismissDialog()
             }
-
         })
     }
 
     private fun storeUserToDB(user: User) {
+        user.device_token = PrefsManager(this).loadDeviceToken()!!
+        user.device_id = Utils.getDeviceID(this)
+        Log.d("device_id", Utils.getDeviceID(this).toString())
+
         DBManager.storeUser(user, object : DBUserHandler {
             override fun onSuccess(user: User?) {
                 dismissDialog()

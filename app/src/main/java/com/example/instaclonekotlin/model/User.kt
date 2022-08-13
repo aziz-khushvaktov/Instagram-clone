@@ -9,7 +9,7 @@ class User {
     var userImg: String = ""
 
     var device_id = ""
-    var device_type = ""
+    var device_type = "A"
     var device_token = ""
 
     var isFollowed: Boolean = false
